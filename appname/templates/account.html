@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block body %}
+    <div class="container">
+        <div class = "content-section">
+        <br>
+            <div class = "media">
+                <img alt = "account image"  class="rounded-circle account-img" src = "{{ img }}">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ current_user.username }}</h2>
+                    <p class="text-secondary">{{ current_user.email }}</p>
+                    <a class="btn btn-outline-info pr-2 pl-2" href="{{ url_for("users.change_password", user_id = current_user.id) }}"> Change Password </a>
+                </div>
+            </div>
+            <!-- form to the current user to edit his account information -->
+            <div class="container">
+                <form method="post" action="" novalidate enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                  <div class="form-group">
+                    <legend class="border-bottom mb-4">Account Info</legend>
+                      {{ form.username.label(class = "exampleInputEmail1") }}
+                      {% if form.username.errors %}
+                          {{ form.username(class = "form-control is-invalid") }}
+                          <div class="invalid-feedback">
+                            {% for error in form.username.errors %}
+                                  <span>{{ error }}</span>
+                            {% endfor %}
+                          </div>
+                      {% else %}
+                          {{ form.username(class = "form-control" ) }}
+                      {% endif %}
+
+                  </div>
+                  <div class="form-group">
+                      {{ form.email.label(class = "form-control-label") }}
+                      {% if form.email.errors %}
+                          {{ form.email(class = "form-control is-invalid" ) }}
+                          <div class="invalid-feedback">
+                            {% for error in form.email.errors %}
+                                  <span>{{ error }}</span>
+                            {% endfor %}
+                          </div>
+                      {% else %}
+                          {{ form.email(class = "form-control") }}
+                      {% endif %}
+                  </div>
+
+                    <div class="form-group">
+                        {{ form.image_name.label() }}
+                        {{ form.image_name(class = "form-control-file") }}
+                        {% if form.image_name.errors %}
+                            {% for error in form.image_name.errors %}
+                                  <small class="text-danger">{{ error }}</small>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="remove image" name ="action1" class="btn btn-secondary">
+                    </div>
+                    <br>
+                    {{ form.submit(class="btn btn-primary") }}
+                <br>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% if posts.items %}
+    {% if posts.items[0].author.id == current_user.id %}
+        <div class="container">
+        <div class = "content-section">
+            <h2> Posts </h2>
+            {% for post in posts.items %}
+                 <div class="content-section">
+                    <h5> <a class="article-title" href="{{ url_for("posts.post_full", post_id = post.id) }}">{{ post.title }}</a>  </h5>
+                     <small class="text-muted">{{ post.date_create.strftime("%y-%m-%d") }}</small>
+                    <p> {{ post.content }} </p>
+                 </div>
+            {% endfor %}
+
+            {#     to loop on the pages and display it       #}
+
+            {% for page_num in posts.iter_pages(left_edge= 1, right_edge = 1, left_current = 1, right_current= 2) %}
+                {% if page_num %}
+                    {% if page_num == posts.page %}
+                        <a class="btn btn-info mb-4" href="{{ url_for("users.account", page = page_num, user_id = current_user.id) }}">{{ page_num }}</a>
+                    {% else %}
+                        <a class="btn btn-outline-info" href="{{ url_for("users.account", user_id = current_user.id, page = page_num) }}">{{ page_num }}</a>
+                    {% endif %}
+                {% else %}
+                    ...
+                {% endif %}
+            {% endfor %}
+
+            {#        end loop        #}
+
+
+            <br>
+                <a class="btn btn-primary" href="{{ url_for("posts.Post_page") }}"> New Post </a>
+            <br>
+        </div>
+    </div>
+    {% else %}
+        <div class="container">
+            <div class = "content-section">
+                <h2> You don't make any Post Yet </h2>
+                <br>
+                <a class="btn btn-primary" href="{{ url_for("posts.Post_page") }}"> New Post </a>
+            </div>
+        </div>
+    {% endif %}
+    {% endif %}
+
+{% endblock %}

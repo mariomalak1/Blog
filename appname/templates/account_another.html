@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+        <div class = "content-section">
+        <br>
+            <div class = "media">
+                <img alt = "account image"  class="rounded-circle account-img" src = "{{ url_for("static", filename= "/imgs/profile_images/"+ user.image_file) }}">
+                <div class="media-body">
+                    <h2 class="account-heading">{{ user.username }}</h2>
+                    <p class="text-secondary">{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    {% if posts.items %}
+    <div class="container">
+        <div class = "content-section">
+            <h2> Posts </h2>
+            {% for post in posts.items %}
+                 <div class="content-section">
+                    <h5> <a class="article-title" href="{{ url_for("posts.post_full", post_id = post.id) }}">{{ post.title }}</a></h5>
+                     <small class="text-muted">{{ post.date_create.strftime("%y-%m-%d") }}</small>
+                    <p> {{ post.content }} </p>
+                 </div>
+            {% endfor %}
+        </div>
+    </div>
+        {#     to loop on the pages and display it       #}
+        {% for page_num in posts.iter_pages() %}
+            {% if page_num %}
+                {% if page_num == posts.page %}
+                    <a class="btn btn-info mb-4" href="{{ url_for("users.account_view", page = page_num, user_id = posts.items[0].author.id) }}">{{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-info" href="{{ url_for("users.account_view", user_id = posts.items[0].author.id, page = page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+        {#        end loop        #}
+
+    {% else %}
+        <div class="container">
+            <div class = "content-section">
+                <h2> He Doesn't create any post yet </h2>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}

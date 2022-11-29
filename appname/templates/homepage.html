@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+    {% block body %}
+        {% for post in posts.items %}
+            <div class="container">
+                <article class="media content-section">
+                    {% if post.author.username == current_user.username %}
+                        <a href="{{ url_for("users.account", user_id = post.author.id) }}"> <img class="rounded-circle article-img" src = "{{ url_for("static", filename= "imgs/profile_images/" + post.author.image_file) }}"></a>
+                    {% else %}
+                        <a href="{{ url_for("users.account_view", user_id = post.author.id) }}"> <img class="rounded-circle article-img" src = "{{ url_for("static", filename= "imgs/profile_images/" + post.author.image_file) }}"></a>
+                    {% endif %}
+                    <div class="media-body">
+                        <div class="article-metadata">
+                            {% if current_user == post.author%}
+                                <a class="mr-2" href="{{ url_for("users.account", user_id = post.author.id) }}">{{ post.author.username }} </a>
+                            {% else %}
+                                <a class="mr-2" href="{{ url_for("users.account_view", user_id = post.author.id) }}">{{ post.author.username }} </a>
+                            {% endif %}
+                            <small class="text-muted">{{ post.date_create.strftime("%y-%m-%d") }}</small>
+                            <h2><a class="article-title" href="{{ url_for("posts.post_full", post_id = post.id) }}">{{ post.title }} </a> </h2>
+                            <p class="article-content"> {{ post.content }} </p>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        {% endfor %}
+        {% for page_num in posts.iter_pages(left_edge= 1, right_edge = 1, left_current = 1, right_current= 2) %}
+            {% if page_num %}
+                {% if page_num == posts.page %}
+                    <a class="btn btn-info mb-4" href="{{ url_for("main.homepage", page = page_num) }}">{{ page_num }}</a>
+                {% else %}
+                    <a class="btn btn-outline-info" href="{{ url_for("main.homepage", page = page_num) }}">{{ page_num }}</a>
+                {% endif %}
+            {% else %}
+                ...
+            {% endif %}
+        {% endfor %}
+    {% endblock %}

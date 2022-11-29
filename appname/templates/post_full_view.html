@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block body %}
+    <div class="container">
+        <article class="media content-section">
+        {% if post.author.username == current_user.username %}
+            <a href="{{ url_for("users.account", user_id = current_user.id) }}"> <img class="rounded-circle article-img" src = "{{ url_for("static", filename= "imgs/profile_images/" + post.author.image_file) }}"></a>
+        {% else %}
+            <a href="{{ url_for("users.account_view", user_id = post.author.id) }}"> <img class="rounded-circle article-img" src = "{{ url_for("static", filename= "imgs/profile_images/" + post.author.image_file) }}"></a>
+        {% endif %}
+            <div class="media-body">
+                <div class="article-metadata">
+                    {% if current_user == post.author%}
+                        <a class="mr-2" href="{{ url_for("users.account", user_id = current_user.id) }}">{{ post.author.username }} </a>
+                    {% else %}
+                        <a class="mr-2" href="{{ url_for("users.account_view", user_id = post.author.id) }}">{{ post.author.username }} </a>
+                    {% endif %}
+                    <small class="text-muted">{{ post.date_create.strftime("%y-%m-%d") }}</small>
+                    <h2 class="article-title">{{ post.title }}</h2>
+                    <p class="article-content"> {{ post.content }} </p>
+                </div>
+                {% if post.author.username == current_user.username %}
+                <a class="btn btn-primary mr-1 mt-2" href="{{ url_for("posts.post_edit", post_id = post.id) }}">Edit</a>
+                    <button type="button" class="btn btn-danger mt-2" data-toggle="modal" data-target="#deleteModal">Delete</button>
+                    <!-- Modal -->
+                    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel">Delete Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            You Sure You Want to Delete Post of Title:<br> {{ post.title }}
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <a type="button" href="{{ url_for("posts.delete_post", post_id = post.id, place = "homepage") }}" class="btn btn-danger">Confirm</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <!-- end of modal  -->
+            {% else %}
+                <form method="post">
+                    <input type="hidden" name="another_title_page" value="{{ post.title }}">
+                    <input type="button" name="submit_name" value="Reply" class="btn btn-primary mr-1 mt-2">
+                </form>
+            {% endif %}
+            </div>
+        </article>
+    </div>
+{% endblock %}
