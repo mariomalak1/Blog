@@ -6,8 +6,6 @@ from appname import app, mail
 from flask_login import current_user
 from flask_mail import Message
 
-
-
 # function  to save image
 def save_image(form_img):
     random_hex = secrets.token_hex(8)

@@ -8,5 +8,4 @@ class Config:
     MAIL_USE_TLS = False
     MAIL_USE_SSL = True
     MAIL_USERNAME = os.getenv("EMAIL_USER")
-    MAIL_PASSWORD = "vddmbkrekcrwepgu"
-
+    MAIL_PASSWORD = os.getenv("APP_PASSWORD_GMAIL")
