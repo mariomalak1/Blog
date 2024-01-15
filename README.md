@@ -7,7 +7,7 @@ this web app it's just a tutorial to train on Flask framework in web by Python P
 what i learn from
 
 - send mails
-- divide the hole project to some modules
+- divide the whole project to some modules
 - how to deal with static files
 - how to deal with images in flask
 - make base template and make all templates inherit from it
